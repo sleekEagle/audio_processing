@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 '''
 Signal to noise ratio (SNR) can be defined as 
 SNR = 20*log(RMS_signal/RMS_noise)
-where RMS_signal is the RMS value of signal and RMS_nosie is that of noise.
+where RMS_signal is the RMS value of signal and RMS_noise is that of noise.
       log is the logarithm of 10
 
 *****additive white gausian noise (AWGN)****
@@ -31,7 +31,7 @@ def get_white_noise(signal,SNR) :
     #RMS value of signal
     RMS_s=math.sqrt(np.mean(signal**2))
     #RMS values of noise
-    RMS_n=RMS_s/(pow(10,SNR/20))
+    RMS_n=math.sqrt(RMS_s**2/(pow(10,SNR/20)))
     #Additive white gausian noise. Thereore mean=0
     #Because sample length is large (typically > 40000)
     #we can use the population formula for standard daviation.
@@ -44,7 +44,7 @@ def get_white_noise(signal,SNR) :
 def get_noise_from_sound(signal,noise,SNR):
     RMS_s=math.sqrt(np.mean(signal**2))
     #required RMS of noise
-    RMS_n=RMS_s/(pow(10,SNR/20))
+    RMS_n=math.sqrt(RMS_s**2/(pow(10,SNR/20)))
     
     #current RMS of noise
     RMS_n_current=math.sqrt(np.mean(noise**2))
@@ -73,7 +73,10 @@ plt.xlabel("FFT coefficient")
 plt.ylabel("Magnitude")
 plt.show()
 signal_noise=signal+noise
-
+plt.plot(signal_noise)
+plt.xlabel("Sample number")
+plt.ylabel("Amplitude")
+plt.show()
 
 #**********************************
 #*************add real world noise******
@@ -90,6 +93,7 @@ noise_file='/home/sleek_eagle/research/emotion/code/audio_processing/noise.wav'
 noise, sr = librosa.load(noise_file)
 noise=np.interp(noise, (noise.min(), noise.max()), (-1, 1))
 
+
 #crop noise if its longer than signal
 #for this code len(noise) shold be greater than len(signal)
 #it will not work otherwise!
@@ -98,17 +102,22 @@ if(len(noise)>len(signal)):
 
 noise=get_noise_from_sound(signal,noise,SNR=10)
 
+signal_noise=signal+noise
+
+
 print("SNR = " + str(20*np.log10(math.sqrt(np.mean(signal**2))/math.sqrt(np.mean(noise**2)))))
 
-plt.plot(signal+noise)
+plt.plot(signal_noise)
 plt.xlabel("Sample number")
-plt.ylabel("Noise amplitude")
+plt.ylabel("Amplitude")
 plt.show()
 
 
 
 
 
+from scipy.io.wavfile import write
+write("/home/sleek_eagle/research/emotion/code/audio_processing/bbb.wav",sr,signal_noise)
 
 
 
