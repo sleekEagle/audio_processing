@@ -31,7 +31,7 @@ def get_white_noise(signal,SNR) :
     #RMS value of signal
     RMS_s=math.sqrt(np.mean(signal**2))
     #RMS values of noise
-    RMS_n=math.sqrt(RMS_s**2/(pow(10,SNR/20)))
+    RMS_n=math.sqrt(RMS_s**2/(pow(10,SNR/10)))
     #Additive white gausian noise. Thereore mean=0
     #Because sample length is large (typically > 40000)
     #we can use the population formula for standard daviation.
@@ -44,7 +44,7 @@ def get_white_noise(signal,SNR) :
 def get_noise_from_sound(signal,noise,SNR):
     RMS_s=math.sqrt(np.mean(signal**2))
     #required RMS of noise
-    RMS_n=math.sqrt(RMS_s**2/(pow(10,SNR/20)))
+    RMS_n=math.sqrt(RMS_s**2/(pow(10,SNR/10)))
     
     #current RMS of noise
     RMS_n_current=math.sqrt(np.mean(noise**2))
